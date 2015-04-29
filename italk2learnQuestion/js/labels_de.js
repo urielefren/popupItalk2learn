@@ -1,11 +1,11 @@
 var labels = {
-	title: "Por favor Selecciona una cara por pregunta",
-	responseDialog: "Por favor, responde a todas las preguntas",
+	title: "Bitte wählen Sie ein Gesicht Fragen",
+	responseDialog: "Bitte beantworten Sie alle Fragen",
 	1: {
-		labelQues: "¿Que tan fácil fue realizar la última tarea?",
+		labelQues: "Wie einfach war die Durchführung der letzten Aufgabe?",
 		answers: {
 			1: {
-				label: "Fácil",
+				label: "Leicht",
 				srcIma: "resources/1.png"
 			},
 			
@@ -15,17 +15,17 @@ var labels = {
 			},
 			
 			3: {
-				label: "Dificil",
+				label: "Schwer",
 				srcIma: "resources/3.png"
 			}
 		}
 	},
 	
 	2: {
-		labelQues: "¿Que tan Confuso fue realizar la última tarea?",
+		labelQues: "Was war so verwirrend führen die letzte Aufgabe?",
 		answers: {
 			1: {
-				label: "Nada Confuso",
+				label: "Nichts Confused",
 				srcIma: "resources/1.png"
 			},
 			
@@ -35,17 +35,17 @@ var labels = {
 			},
 			
 			3: {
-				label: "Confuso",
+				label: "Verwirrt",
 				srcIma: "resources/3.png"
 			}
 		}
 	},
 	
 	3: {
-		labelQues: "¿Que tan Disfrutable fue realizar la última tarea?",
+		labelQues: "Was war so angenehm, um die letzte Aufgabe zu erfüllen?",
 		answers: {
 			1: {
-				label: "Disfrutable",
+				label: "Angenehm",
 				srcIma: "resources/1.png"
 			},
 			
@@ -55,17 +55,22 @@ var labels = {
 			},
 			
 			3: {
-				label: "Nada Disfrutable",
+				label: "Nichts Angenehmer",
 				srcIma: "resources/3.png"
+			},
+			
+			4: {
+				label: "Angenehm2",
+				srcIma: "resources/mar.png"
 			}
 		}
 	},
 	
 	4: {
-		labelQues: "¿Que tan aburrido fue realizar la última tarea?",
+		labelQues: "Wie langweilig wurde die Durchführung der letzten Aufgabe?",
 		answers: {
 			1: {
-				label: "Nada aburrido",
+				label: "Nicht Langweilig",
 				srcIma: "resources/1.png"
 			},
 			
@@ -75,17 +80,17 @@ var labels = {
 			},
 			
 			3: {
-				label: "Aburrido",
+				label: "Langweilig",
 				srcIma: "resources/3.png"
 			}
 		}
 	},
 	
 	5: {
-		labelQues: "¿Que tan frustrante fue realizar la última tarea?",
+		labelQues: "Wie frustrierend war die Durchführung der letzten Aufgabe?",
 		answers: {
 			1: {
-				label: "Nada Frustrante",
+				label: "Nichts Frustrierend",
 				srcIma: "resources/1.png"
 			},
 			
@@ -95,7 +100,7 @@ var labels = {
 			},
 			
 			3: {
-				label: "Frustrante",
+				label: "Frustrierend",
 				srcIma: "resources/3.png"
 			}
 		}

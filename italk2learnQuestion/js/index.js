@@ -14,15 +14,16 @@ function IndexController() {
 	this.loadPage =  function (){
 		scope.lang = getURLParameter("lang");//obtener el idioma de la url, si es 'en' es ingles, otro caso (sp o null) es español
 		
-		var theLangScript = "js/labels_sp.js";//etiquetas en español
-		if(scope.lang!="sp"){
-			theLangScript = "js/labels_en.js";//etiquetas en ingles
-		}
-		
-		else{
+		var theLangScript = "js/labels_en.js";//etiquetas en español
+		if(scope.lang=="es"){
+			theLangScript = "js/labels_sp.js";//etiquetas en ingles
 			$("#t").html("Hola");
-			$("#lang").html("English");
 			$("#next").attr("value","Siguiente Ejercicio");
+		}
+		else if(scope.lang=="de"){
+			theLangScript = "js/labels_de.js";//etiquetas en aleman, supongo
+			$("#t").html("Hallo");
+			$("#next").attr("value","Nächstes Jahr");
 		}
 		
 		loadScript(theLangScript, scope.prepareLabels); //cargar script de idioma
@@ -46,7 +47,7 @@ function IndexController() {
 						var json = scope.buildJSONResponse();
 				        if(json!=null && json!=undefined){
 				        	alert("Datos enviados:"+JSON.stringify(json));
-				        	$( this ).dialog( "close" );
+				        	$( this ).dialog("close");
 				        	scope.cleanForm();
 				        }
 				        
@@ -59,10 +60,18 @@ function IndexController() {
 			});
 		});
 		
-		$("#lang").click(function() {
+		$("#lang1").click(function() {
 			var thelang = "en";
-			if(scope.lang=="en")
-				thelang="sp";
+			window.location='./index.html?lang='+thelang;
+		});
+		
+		$("#lang2").click(function() {
+			var thelang = "es";
+			window.location='./index.html?lang='+thelang;
+		});
+		
+		$("#lang3").click(function() {
+			var thelang = "de";
 			window.location='./index.html?lang='+thelang;
 		});
 	};
@@ -77,20 +86,16 @@ function IndexController() {
 				$("#questionsDialog").attr("title",obj);
 			}
 			else{
-				$("#questionsDialog").append("<label id='laQu"+index+"'>"+ obj.labelQues+":</label><br>");
-				$("#questionsDialog").append("<img title='"+obj.labelAns1+"' id='r"+index+"1' src='resources/1.png' width='45' height='45' hspace='10' class='imOpt'>");
-				$("#r"+index+"1").click(function() {
-					scope.facePressed(index, 1);
-				});
-				$("#questionsDialog").append("<img title='"+obj.labelAns2+"' id='r"+index+"2' src='resources/2.png' width='45' height='45' hspace='10' class='imOpt'>");
-				$("#r"+index+"2").click(function() {
-					scope.facePressed(index, 2);
-				});
-				$("#questionsDialog").append("<img title='"+obj.labelAns3+"' id='r"+index+"3' src='resources/3.png' width='45' height='45' hspace='10' class='imOpt'>");
-				$("#r"+index+"3").click(function() {
-					scope.facePressed(index, 3);
-				});
-				$("#questionsDialog").append("<br><br>");
+				if(index!="responseDialog"){
+					$("#questionsDialog").append("<label id='laQu"+index+"'>"+ obj.labelQues+":</label><br>");
+					$.map(obj.answers, function(obj2, index2) {
+						$("#questionsDialog").append("<img title='"+obj2.label+"' id='r"+index+index2+"' src='"+obj2.srcIma+"' width='45' height='45' hspace='10' class='imOpt'>");
+						$("#r"+index+index2).click(function() {
+							scope.facePressed(index, index2);
+						});
+					});
+					$("#questionsDialog").append("<br><br>");
+				}
 			}
 		});
 	};
@@ -99,7 +104,7 @@ function IndexController() {
 		var json = null;
 		var arr = [];
 		$.map(scope.dataLang, function(obj, index) {
-			if(index!="title"){
+			if(index!="title" && index!="responseDialog"){
 				var ind = scope.returnSelectedAns(index);
 				if(ind!=null && ind!="" && ind!=undefined){
 					var res = $(ind).attr("title");
@@ -109,10 +114,7 @@ function IndexController() {
 		});
 		
 		if(arr.length!=scope.countAnswers()){
-			var msg = "Please, You must respond all questions!";
-			if(scope.lang!="en"){
-				msg = "Por favor, responde a todas las preguntas";
-			}
+			var msg = scope.dataLang.responseDialog;
 			arr = null;
 			alert(msg);
 		}
@@ -132,7 +134,7 @@ function IndexController() {
 	
 	this.cleanForm = function(){
 		$.map(scope.dataLang, function(obj, index) {
-			if(index!="title"){
+			if(index!="title" && index!="responseDialog"){
 				$("#r"+index+1).removeClass('selected');
 				$("#r"+index+2).removeClass('selected');
 				$("#r"+index+3).removeClass('selected');
@@ -143,8 +145,22 @@ function IndexController() {
 	this.countAnswers = function(){
 		var cont = 0;
 		$.map(scope.dataLang, function(obj, index) {
-			if(index!="title"){
+			if(index!="title" && index!="responseDialog"){
 				cont++;
+			}
+		});
+		return cont;
+	}
+	
+	this.countAnswersPerQuestion = function(idQ){
+		var cont = 0;
+		$.map(scope.dataLang, function(obj, index) {
+			if(index!="title" && index!="responseDialog"){
+				$.map(obj.answers, function(obj2, index2) {
+					if(idQ==index){
+						cont++;
+					}
+				});
 			}
 		});
 		return cont;
@@ -152,7 +168,8 @@ function IndexController() {
 	
 	this.returnSelectedAns = function(id1){
 		var res= "";
-		for(var i=1;i<=3;i++){
+		var numberQues = scope.countAnswersPerQuestion(id1);
+		for(var i=1;i<= numberQues;i++){
 			if(scope.askSelect(id1,i)){
 				res = "#r"+id1+i;
 				break;
@@ -172,9 +189,10 @@ function IndexController() {
 	}
 	
 	this.facePressed = function(index1, index2){
-		scope.removeSelect(index1, 1);
-		scope.removeSelect(index1, 2);
-		scope.removeSelect(index1, 3);
+		var numberQues = scope.countAnswersPerQuestion(index1);
+		for(var i=1; i<= numberQues; i++){
+			scope.removeSelect(index1, i);
+		}
 		$("#r"+index1+index2).addClass('selected');
 	};
 }
